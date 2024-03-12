@@ -5,8 +5,8 @@ class PeriodEntity {
   DateTime dateInit;
   DateTime dateEnd;
   String category;
-  int goal1;
-  int goal2;
+  String goal1;
+  String goal2;
 
   PeriodEntity({
     required this.name,
