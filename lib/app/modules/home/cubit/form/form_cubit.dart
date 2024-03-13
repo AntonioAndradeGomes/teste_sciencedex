@@ -1,5 +1,8 @@
+import 'dart:math';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:teste_sciencedex/app/modules/home/cubit/form/form_validator_state.dart';
+import 'package:teste_sciencedex/app/modules/home/models/form_return.dart';
+import 'package:teste_sciencedex/app/modules/home/models/period_model.dart';
 
 class FormCubit extends Cubit<FormValidatorState> {
   List<String> listCategory = <String>[
@@ -12,13 +15,14 @@ class FormCubit extends Cubit<FormValidatorState> {
 
   FormCubit() : super(const FormValidatorUpdate());
 
-  void initForm({
+  void _initForm({
     String? name,
     DateTime? dateInit,
     DateTime? dateEnd,
     String? category,
     String? goal1,
     String? goal2,
+    PeriodModel? entity,
   }) {
     emit(state.copyWith(
       name: name,
@@ -27,7 +31,22 @@ class FormCubit extends Cubit<FormValidatorState> {
       category: category,
       goal1: goal1,
       goal2: goal2,
+      editPeriod: entity,
     ));
+  }
+
+  void initFormByEntity({
+    required PeriodModel periodEntity,
+  }) {
+    _initForm(
+      name: periodEntity.name,
+      category: periodEntity.category,
+      dateEnd: periodEntity.dateEnd,
+      dateInit: periodEntity.dateInit,
+      goal1: periodEntity.goal1,
+      goal2: periodEntity.goal2,
+      entity: periodEntity,
+    );
   }
 
   void updateName(String? name) {
@@ -59,6 +78,41 @@ class FormCubit extends Cubit<FormValidatorState> {
         state.dateInit != null &&
         state.dateEnd != null &&
         state.category != null;
+  }
+
+  FormReturn returnPeriod(TypeReturn type) {
+    switch (type) {
+      case TypeReturn.add:
+        return FormReturn(
+          periodModel: PeriodModel(
+            name: state.name,
+            dateInit: state.dateInit!,
+            dateEnd: state.dateEnd!,
+            category: state.category!,
+            goal1: state.goal1,
+            goal2: state.goal2,
+          ),
+          typeReturn: TypeReturn.add,
+        );
+      case TypeReturn.del:
+        return FormReturn(
+          periodModel: state.editPeriod!,
+          typeReturn: TypeReturn.del,
+        );
+      case TypeReturn.up:
+        return FormReturn(
+          periodModel: PeriodModel(
+            id: state.editPeriod!.id,
+            name: state.name,
+            dateInit: state.dateInit!,
+            dateEnd: state.dateEnd!,
+            category: state.category!,
+            goal1: state.goal1,
+            goal2: state.goal2,
+          ),
+          typeReturn: TypeReturn.up,
+        );
+    }
   }
 
   void reset() {

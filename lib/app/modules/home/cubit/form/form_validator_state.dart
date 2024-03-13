@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:teste_sciencedex/app/modules/home/models/period_model.dart';
 
 abstract class FormValidatorState extends Equatable {
   final String name;
@@ -7,6 +8,7 @@ abstract class FormValidatorState extends Equatable {
   final String? category;
   final String? goal1;
   final String? goal2;
+  final PeriodModel? editPeriod;
 
   const FormValidatorState({
     this.name = '',
@@ -15,6 +17,7 @@ abstract class FormValidatorState extends Equatable {
     this.category,
     this.goal1,
     this.goal2,
+    this.editPeriod,
   });
 
   FormValidatorState copyWith({
@@ -24,6 +27,7 @@ abstract class FormValidatorState extends Equatable {
     String? category,
     String? goal1,
     String? goal2,
+    PeriodModel? editPeriod,
   });
 
   @override
@@ -34,6 +38,7 @@ abstract class FormValidatorState extends Equatable {
         category,
         goal1,
         goal2,
+        editPeriod,
       ];
 }
 
@@ -45,6 +50,7 @@ class FormValidatorUpdate extends FormValidatorState {
     String? category,
     String? goal1,
     String? goal2,
+    PeriodModel? editPeriod,
   }) : super(
           name: name ?? "",
           dateInit: dateInit,
@@ -52,6 +58,7 @@ class FormValidatorUpdate extends FormValidatorState {
           category: category,
           goal1: goal1,
           goal2: goal2,
+          editPeriod: editPeriod,
         );
 
   @override
@@ -62,6 +69,7 @@ class FormValidatorUpdate extends FormValidatorState {
     String? category,
     String? goal1,
     String? goal2,
+    PeriodModel? editPeriod,
   }) {
     return FormValidatorUpdate(
       name: name ?? this.name,
@@ -70,6 +78,7 @@ class FormValidatorUpdate extends FormValidatorState {
       dateEnd: dateEnd ?? this.dateEnd,
       goal1: goal1 ?? this.goal1,
       goal2: goal2 ?? this.goal2,
+      editPeriod: editPeriod ?? this.editPeriod,
     );
   }
 }

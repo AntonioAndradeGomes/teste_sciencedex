@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:teste_sciencedex/app/modules/home/entities/period_entity.dart';
+import 'package:teste_sciencedex/app/modules/home/models/period_model.dart';
 import 'package:teste_sciencedex/app/shared/theme/app_colors.dart';
 
 class PeriodItem extends StatelessWidget {
-  final PeriodEntity entity;
+  final GestureTapCallback? onTap;
+  final PeriodModel entity;
   const PeriodItem({
     super.key,
     required this.entity,
+    this.onTap,
   });
 
   @override
@@ -25,7 +27,7 @@ class PeriodItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(5),
         child: InkWell(
           borderRadius: BorderRadius.circular(5),
-          onTap: () {},
+          onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.all(10),
             child: Row(

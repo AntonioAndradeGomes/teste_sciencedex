@@ -5,6 +5,8 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/intl.dart';
 import 'package:teste_sciencedex/app/modules/home/cubit/form/form_cubit.dart';
 import 'package:teste_sciencedex/app/modules/home/cubit/form/form_validator_state.dart';
+import 'package:teste_sciencedex/app/modules/home/models/form_return.dart';
+import 'package:teste_sciencedex/app/modules/home/models/period_model.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/divider_widget.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/error_form_alert_dialog.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/form_container_item_widget.dart';
@@ -14,7 +16,11 @@ import 'package:teste_sciencedex/app/shared/theme/app_colors.dart';
 import 'package:teste_sciencedex/app/shared/utils/helpers.dart';
 
 class AddPeriodDialog extends StatefulWidget {
-  const AddPeriodDialog({super.key});
+  final PeriodModel? entity;
+  const AddPeriodDialog({
+    super.key,
+    this.entity,
+  });
 
   @override
   State<AddPeriodDialog> createState() => _AddPeriodDialogState();
@@ -22,6 +28,17 @@ class AddPeriodDialog extends StatefulWidget {
 
 class _AddPeriodDialogState extends State<AddPeriodDialog> {
   final _formCubit = Modular.get<FormCubit>();
+
+  @override
+  void initState() {
+    if (widget.entity != null) {
+      _formCubit.initFormByEntity(
+        periodEntity: widget.entity!,
+      );
+    }
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +91,7 @@ class _AddPeriodDialogState extends State<AddPeriodDialog> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   TextFormField(
-                    initialValue: state.name,
+                    initialValue: _formCubit.state.name,
                     onChanged: _formCubit.updateName,
                     decoration: InputDecoration(
                       filled: true,
@@ -118,7 +135,6 @@ class _AddPeriodDialogState extends State<AddPeriodDialog> {
                                     context,
                                     state.dateInit ?? DateTime.now(),
                                   );
-
                                   _formCubit.updateDateInit(date);
                                 },
                                 label: state.dateInit != null
@@ -324,43 +340,115 @@ class _AddPeriodDialogState extends State<AddPeriodDialog> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.symmetric(
+                    padding: EdgeInsets.symmetric(
                       vertical: 35,
+                      horizontal: widget.entity != null ? 15 : 0,
                     ),
-                    child: Align(
-                      alignment: Alignment.center,
-                      child: FilledButton(
-                        onPressed: () {
-                          if (_formCubit.isValid()) {
-                          } else {
-                            showAdaptiveDialog(
-                              context: context,
-                              builder: (_) => ErrorFormAlertDialog(
-                                isName: state.name.isEmpty,
-                                isInit: state.dateInit == null,
-                                isEnd: state.dateEnd == null,
-                                isCategory: state.category == null,
+                    child: widget.entity != null
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              FilledButton(
+                                onPressed: () {
+                                  Modular.to.pop(
+                                    _formCubit.returnPeriod(
+                                      TypeReturn.del,
+                                    ),
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.red,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 8,
+                                    horizontal: 20,
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Excluir',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ), // Define o texto do botão
                               ),
-                            );
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.blue,
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 8,
-                            horizontal: 20,
+                              FilledButton(
+                                onPressed: () {
+                                  if (_formCubit.isValid()) {
+                                    Modular.to.pop(
+                                      _formCubit.returnPeriod(
+                                        TypeReturn.up,
+                                      ),
+                                    );
+                                  } else {
+                                    showAdaptiveDialog(
+                                      context: context,
+                                      builder: (_) => ErrorFormAlertDialog(
+                                        isName: state.name.isEmpty,
+                                        isInit: state.dateInit == null,
+                                        isEnd: state.dateEnd == null,
+                                        isCategory: state.category == null,
+                                      ),
+                                    );
+                                  }
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: AppColors.blue,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 8,
+                                    horizontal: 20,
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Editar',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ), // Define o texto do botão
+                              ),
+                            ],
+                          )
+                        : Align(
+                            alignment: Alignment.center,
+                            child: FilledButton(
+                              onPressed: () {
+                                if (_formCubit.isValid()) {
+                                  Modular.to.pop(
+                                    _formCubit.returnPeriod(
+                                      TypeReturn.add,
+                                    ),
+                                  );
+                                } else {
+                                  showAdaptiveDialog(
+                                    context: context,
+                                    builder: (_) => ErrorFormAlertDialog(
+                                      isName: state.name.isEmpty,
+                                      isInit: state.dateInit == null,
+                                      isEnd: state.dateEnd == null,
+                                      isCategory: state.category == null,
+                                    ),
+                                  );
+                                }
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AppColors.blue,
+                                padding: const EdgeInsets.symmetric(
+                                  vertical: 8,
+                                  horizontal: 20,
+                                ),
+                              ),
+                              child: const Text(
+                                'Concluir',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ), // Define o texto do botão
+                            ),
                           ),
-                        ),
-                        child: const Text(
-                          'Concluir',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ), // Define o texto do botão
-                      ),
-                    ),
                   ),
                 ],
               );

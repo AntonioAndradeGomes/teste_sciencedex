@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
-import 'package:teste_sciencedex/app/modules/home/entities/period_entity.dart';
+import 'package:teste_sciencedex/app/modules/home/cubit/periods/periods_cubit.dart';
+import 'package:teste_sciencedex/app/modules/home/models/form_return.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/add_period_dialog.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/divider_widget.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/image_button.dart';
-import 'package:teste_sciencedex/app/modules/home/widgets/period_item.dart';
+import 'package:teste_sciencedex/app/modules/home/widgets/list_periods_widget.dart';
 import 'package:teste_sciencedex/app/shared/theme/app_colors.dart';
-
-import 'counter_cubit.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -17,47 +16,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final CounterCubit _counterCubit = Modular.get();
-  List<PeriodEntity> periods = [
-    PeriodEntity(
-      name: 'Super Feirão',
-      dateInit: DateTime(24, DateTime.january, 1),
-      dateEnd: DateTime(24, DateTime.january, 20),
-      category: 'Categoria 5',
-      goal1: '300',
-      goal2: '500',
-    ),
-    PeriodEntity(
-      name: 'Super Feirão',
-      dateInit: DateTime(24, DateTime.january, 1),
-      dateEnd: DateTime(24, DateTime.january, 20),
-      category: 'Categoria 5',
-      goal1: '300',
-      goal2: '500',
-    ),
-    PeriodEntity(
-      name: 'Super Feirão',
-      dateInit: DateTime(24, DateTime.january, 1),
-      dateEnd: DateTime(24, DateTime.january, 20),
-      category: 'Categoria 5',
-      goal1: '300',
-      goal2: '500',
-    ),
-    PeriodEntity(
-      name: 'Super Feirão',
-      dateInit: DateTime(24, DateTime.january, 1),
-      dateEnd: DateTime(24, DateTime.january, 20),
-      category: 'Categoria 5',
-      goal1: '300',
-      goal2: '500',
-    ),
-  ];
-
-  @override
-  void dispose() {
-    _counterCubit.close();
-    super.dispose();
-  }
+  final _periodsCubit = Modular.get<PeriodsCubit>();
 
   @override
   Widget build(BuildContext context) {
@@ -129,38 +88,32 @@ class _HomePageState extends State<HomePage> {
               ),
               Container(
                 height: 345,
+                margin: const EdgeInsets.only(
+                  top: 17,
+                  bottom: 12,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.grey2,
                   borderRadius: BorderRadius.circular(15),
                 ),
-                child: ListView.separated(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 7,
-                    vertical: 20,
-                  ),
-                  itemCount: periods.length,
-                  itemBuilder: (context, index) {
-                    final entity = periods[index];
-                    return PeriodItem(
-                      entity: entity,
-                    );
-                  },
-                  separatorBuilder: (context, index) => const SizedBox(
-                    height: 10,
-                  ),
-                ),
+                child: const ListPeriodsWidget(),
               ),
               Align(
                 alignment: Alignment.topRight,
                 child: FilledButton(
-                  onPressed: () {
-                    showDialog(
+                  onPressed: () async {
+                    final entity = await showDialog<FormReturn?>(
                       barrierColor: Colors.black.withOpacity(0.25),
                       context: context,
                       builder: (context) {
-                        return AddPeriodDialog();
+                        return const AddPeriodDialog();
                       },
                     );
+                    if (entity != null) {
+                      _periodsCubit.addPeriod(
+                        entity.periodModel,
+                      );
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: AppColors.blue,
