@@ -3,12 +3,12 @@ import 'package:intl/intl.dart';
 
 class PeriodModel extends Equatable {
   int? id;
-  final String name;
-  final DateTime dateInit;
-  final DateTime dateEnd;
-  final String category;
-  final String? goal1;
-  final String? goal2;
+  String name;
+  DateTime dateInit;
+  DateTime dateEnd;
+  String category;
+  String? goal1;
+  String? goal2;
 
   PeriodModel({
     this.id,

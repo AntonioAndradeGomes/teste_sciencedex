@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:teste_sciencedex/app/modules/home/cubit/periods/periods_cubit.dart';
+import 'package:teste_sciencedex/app/modules/home/cubit/user/user_cubit.dart';
 import 'package:teste_sciencedex/app/modules/home/models/form_return.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/add_period_dialog.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/divider_widget.dart';
@@ -17,6 +18,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final _periodsCubit = Modular.get<PeriodsCubit>();
+  final _userCubit = Modular.get<UserCubit>();
 
   @override
   Widget build(BuildContext context) {
