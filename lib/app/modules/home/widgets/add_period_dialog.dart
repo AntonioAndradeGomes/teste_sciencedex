@@ -375,19 +375,36 @@ class _AddPeriodDialogState extends State<AddPeriodDialog> {
                               FilledButton(
                                 onPressed: () {
                                   if (_formCubit.isValid()) {
-                                    Modular.to.pop(
-                                      _formCubit.returnPeriod(
-                                        TypeReturn.up,
-                                      ),
-                                    );
+                                    if (state.dateEnd!
+                                        .isAfter(state.dateInit!)) {
+                                      Modular.to.pop(
+                                        _formCubit.returnPeriod(
+                                          TypeReturn.up,
+                                        ),
+                                      );
+                                    } else {
+                                      showAdaptiveDialog(
+                                        context: context,
+                                        builder: (_) =>
+                                            const ErrorFormAlertDialog(
+                                          title: "Erro!",
+                                          message:
+                                              'Data inicial depois da data final!',
+                                        ),
+                                      );
+                                    }
                                   } else {
                                     showAdaptiveDialog(
                                       context: context,
                                       builder: (_) => ErrorFormAlertDialog(
-                                        isName: state.name.isEmpty,
-                                        isInit: state.dateInit == null,
-                                        isEnd: state.dateEnd == null,
-                                        isCategory: state.category == null,
+                                        title:
+                                            "Alguns dados devem ser preenchidos corretamente",
+                                        message: _generateError(
+                                          isName: state.name.isEmpty,
+                                          isInit: state.dateInit == null,
+                                          isEnd: state.dateEnd == null,
+                                          isCategory: state.category == null,
+                                        ),
                                       ),
                                     );
                                   }
@@ -415,19 +432,35 @@ class _AddPeriodDialogState extends State<AddPeriodDialog> {
                             child: FilledButton(
                               onPressed: () {
                                 if (_formCubit.isValid()) {
-                                  Modular.to.pop(
-                                    _formCubit.returnPeriod(
-                                      TypeReturn.add,
-                                    ),
-                                  );
+                                  if (state.dateEnd!.isAfter(state.dateInit!)) {
+                                    Modular.to.pop(
+                                      _formCubit.returnPeriod(
+                                        TypeReturn.add,
+                                      ),
+                                    );
+                                  } else {
+                                    showAdaptiveDialog(
+                                      context: context,
+                                      builder: (_) =>
+                                          const ErrorFormAlertDialog(
+                                        title: "Erro!",
+                                        message:
+                                            'Data inicial depois da data final!',
+                                      ),
+                                    );
+                                  }
                                 } else {
                                   showAdaptiveDialog(
                                     context: context,
                                     builder: (_) => ErrorFormAlertDialog(
-                                      isName: state.name.isEmpty,
-                                      isInit: state.dateInit == null,
-                                      isEnd: state.dateEnd == null,
-                                      isCategory: state.category == null,
+                                      title:
+                                          "Alguns dados devem ser preenchidos corretamente",
+                                      message: _generateError(
+                                        isName: state.name.isEmpty,
+                                        isInit: state.dateInit == null,
+                                        isEnd: state.dateEnd == null,
+                                        isCategory: state.category == null,
+                                      ),
                                     ),
                                   );
                                 }
@@ -457,5 +490,28 @@ class _AddPeriodDialogState extends State<AddPeriodDialog> {
         ),
       ),
     );
+  }
+
+  String _generateError({
+    required bool isName,
+    required bool isInit,
+    required bool isEnd,
+    required bool isCategory,
+  }) {
+    List<String> missingFields = [];
+
+    if (isName) {
+      missingFields.add('Nome');
+    }
+    if (isInit) {
+      missingFields.add('Data de começo');
+    }
+    if (isEnd) {
+      missingFields.add('Data de fim');
+    }
+    if (isCategory) {
+      missingFields.add('Categoria');
+    }
+    return 'Devem ser preenchidos:\n${missingFields.join('\n')}';
   }
 }

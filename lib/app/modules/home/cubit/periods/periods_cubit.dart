@@ -24,11 +24,14 @@ class PeriodsCubit extends Cubit<PeriodsState> {
   void addPeriod(PeriodModel periodModel) async {
     final period = await repository.insertPeriod(periodModel);
     if (period != null) {
-      final updatedPeriods = List<PeriodModel>.from(state.periods ?? []);
+      final updatedPeriods = List<PeriodModel>.from(
+        state.periods ?? [],
+      );
       updatedPeriods.add(period);
       emit(DonePeriodsState(updatedPeriods));
     } else {
       log('Periodo não adicionado');
+      emit(DonePeriodsState(state.periods!));
     }
   }
 
@@ -40,6 +43,7 @@ class PeriodsCubit extends Cubit<PeriodsState> {
       emit(DonePeriodsState(periods));
     } catch (e) {
       log(e.toString());
+      emit(DonePeriodsState(state.periods!));
     }
   }
 
@@ -51,6 +55,7 @@ class PeriodsCubit extends Cubit<PeriodsState> {
       emit(DonePeriodsState(periods));
     } catch (e) {
       log(e.toString());
+      emit(DonePeriodsState(state.periods!));
     }
   }
 }

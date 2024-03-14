@@ -5,9 +5,19 @@ import 'package:teste_sciencedex/app/shared/localstorage/i_local_storage.dart';
 
 class LocalStorageSharedPreferences implements ILocalStorage {
   @override
-  Future<String?> getImagePath(String key) {
-    // TODO: implement getImagePath
-    throw UnimplementedError();
+  Future<String?> getImagePath(String key) async {
+    final shared = await SharedPreferences.getInstance();
+    final path = shared.getString(key);
+    if (path == null) {
+      return path;
+    }
+    final file = await File(path).exists();
+    if (!file) {
+      shared.remove(key);
+      return null;
+    }
+
+    return path;
   }
 
   @override
@@ -23,8 +33,8 @@ class LocalStorageSharedPreferences implements ILocalStorage {
   }
 
   @override
-  Future<void> saveImagePath(File file) {
-    // TODO: implement saveImagePath
-    throw UnimplementedError();
+  Future<void> saveImagePath(String filePath, String key) async {
+    final shared = await SharedPreferences.getInstance();
+    await shared.setString(key, filePath);
   }
 }

@@ -45,20 +45,14 @@ abstract class FormValidatorState extends Equatable {
 class FormValidatorUpdate extends FormValidatorState {
   const FormValidatorUpdate({
     String? name,
-    DateTime? dateInit,
-    DateTime? dateEnd,
-    String? category,
-    String? goal1,
-    String? goal2,
-    PeriodModel? editPeriod,
+    super.dateInit,
+    super.dateEnd,
+    super.category,
+    super.goal1,
+    super.goal2,
+    super.editPeriod,
   }) : super(
           name: name ?? "",
-          dateInit: dateInit,
-          dateEnd: dateEnd,
-          category: category,
-          goal1: goal1,
-          goal2: goal2,
-          editPeriod: editPeriod,
         );
 
   @override

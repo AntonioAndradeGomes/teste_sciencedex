@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
 
+// ignore: must_be_immutable
 class PeriodModel extends Equatable {
   int? id;
   String name;

@@ -19,13 +19,10 @@ abstract class UserState extends Equatable {
 class LoadingUser extends UserState {}
 
 class DoneUser extends UserState {
-  DoneUser({
-    String? username,
-    String? pathImage,
-  }) : super(
-          username: username,
-          pathImage: pathImage,
-        );
+  const DoneUser({
+    super.username,
+    super.pathImage,
+  });
 
   DoneUser copyWith({
     String? username,

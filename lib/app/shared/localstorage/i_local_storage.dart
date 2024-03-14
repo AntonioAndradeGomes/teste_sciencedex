@@ -1,7 +1,8 @@
-import 'dart:io';
-
 abstract class ILocalStorage {
-  Future<void> saveImagePath(File file);
+  Future<void> saveImagePath(
+    String filePath,
+    String key,
+  );
   Future<String?> getImagePath(String key);
   Future<void> putItem(
     String key,

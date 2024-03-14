@@ -19,10 +19,37 @@ class UserCubit extends Cubit<UserState> {
     final username = await localStorage.getItem(
       'username',
     );
+    final filePath = await localStorage.getImagePath(
+      'image',
+    );
     emit(
       DoneUser(
         username: username,
+        pathImage: filePath,
       ),
+    );
+  }
+
+  setNameUser(String name) async {
+    emit(
+      DoneUser(
+        username: name,
+        pathImage: state.pathImage,
+      ),
+    );
+    await localStorage.putItem('username', name);
+  }
+
+  setFilePath(String path) async {
+    emit(
+      DoneUser(
+        username: state.username,
+        pathImage: path,
+      ),
+    );
+    await localStorage.saveImagePath(
+      path,
+      'image',
     );
   }
 }

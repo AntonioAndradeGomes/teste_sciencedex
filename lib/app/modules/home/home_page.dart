@@ -1,17 +1,25 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:teste_sciencedex/app/modules/home/cubit/periods/periods_cubit.dart';
 import 'package:teste_sciencedex/app/modules/home/cubit/user/user_cubit.dart';
+import 'package:teste_sciencedex/app/modules/home/cubit/user/user_state.dart';
 import 'package:teste_sciencedex/app/modules/home/models/form_return.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/add_period_dialog.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/divider_widget.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/image_button.dart';
+import 'package:teste_sciencedex/app/modules/home/widgets/input_user_name_widget.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/list_periods_widget.dart';
+import 'package:teste_sciencedex/app/modules/home/widgets/user_data_loading_widget.dart';
 import 'package:teste_sciencedex/app/shared/theme/app_colors.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
+  const HomePage({
+    super.key,
+  });
   @override
   State createState() => _HomePageState();
 }
@@ -19,7 +27,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _periodsCubit = Modular.get<PeriodsCubit>();
   final _userCubit = Modular.get<UserCubit>();
-
+  final _picker = Modular.get<ImagePicker>();
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -38,46 +46,41 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              const Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      decoration: InputDecoration(
-                        fillColor: Colors.white,
-                        filled: true,
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: AppColors.grey3,
-                          ),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(7),
-                          ),
-                        ),
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 5,
-                        ),
-                        labelText: 'Apelido',
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: AppColors.grey3,
-                          ),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(7),
+              BlocBuilder<UserCubit, UserState>(
+                bloc: _userCubit,
+                builder: (context, state) {
+                  if (state is LoadingUser) {
+                    return const UserDataLoadingWidget();
+                  }
+                  if (state is DoneUser) {
+                    return Row(
+                      children: [
+                        Expanded(
+                          child: InputUserNameWidget(
+                            initialValue: state.username,
+                            onChanged: _userCubit.setNameUser,
                           ),
                         ),
-                      ),
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  ImageButton(),
-                ],
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        ImageButton(
+                          imagePath: state.pathImage,
+                          onTap: () async {
+                            final XFile? image = await _picker.pickImage(
+                              source: ImageSource.gallery,
+                            );
+
+                            if (image != null) {
+                              _userCubit.setFilePath(image.path);
+                            }
+                          },
+                        ),
+                      ],
+                    );
+                  }
+                  return const SizedBox();
+                },
               ),
               const DividerWidget(),
               const Text(
@@ -134,42 +137,79 @@ class _HomePageState extends State<HomePage> {
               const SizedBox(
                 height: 60,
               ),
-              Row(
-                children: [
-                  const CircleAvatar(
-                    backgroundColor: Colors.pink,
-                    maxRadius: 25,
-                  ),
-                  const SizedBox(
-                    width: 14,
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Antonio Andrade',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.blue,
-                        ),
-                      ),
-                      InkWell(
-                        borderRadius: BorderRadius.circular(15),
-                        onTap: () {},
-                        child: const Text(
-                          'Sair',
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.w500,
+              BlocBuilder<UserCubit, UserState>(
+                bloc: _userCubit,
+                builder: (context, state) {
+                  if (state is DoneUser) {
+                    return Row(
+                      children: [
+                        Container(
+                          height: 44,
+                          width: 44,
+                          decoration: const BoxDecoration(
                             color: AppColors.blue,
-                            decoration: TextDecoration.underline,
+                            shape: BoxShape.circle,
                           ),
+                          child:
+                              state.pathImage == null || state.pathImage == ""
+                                  ? const Center(
+                                      child: Icon(
+                                        Icons.image_rounded,
+                                        color: Colors.white,
+                                        size: 15,
+                                      ),
+                                    )
+                                  : ClipRRect(
+                                      borderRadius: BorderRadius.circular(100),
+                                      child: Image.file(
+                                        fit: BoxFit.cover,
+                                        File(
+                                          state.pathImage!,
+                                        ),
+                                        errorBuilder: (_, __, ___) {
+                                          return const Icon(
+                                            Icons.add_a_photo_rounded,
+                                            color: Colors.white,
+                                            size: 15,
+                                          );
+                                        },
+                                      ),
+                                    ),
                         ),
-                      ),
-                    ],
-                  )
-                ],
+                        const SizedBox(
+                          width: 14,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              state.username ?? '',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                                color: AppColors.blue,
+                              ),
+                            ),
+                            InkWell(
+                              borderRadius: BorderRadius.circular(15),
+                              onTap: () {},
+                              child: const Text(
+                                'Sair',
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w500,
+                                  color: AppColors.blue,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      ],
+                    );
+                  }
+                  return const SizedBox();
+                },
               ),
             ],
           ),

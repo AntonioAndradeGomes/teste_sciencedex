@@ -1,8 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:teste_sciencedex/app/shared/theme/app_colors.dart';
 
 class ImageButton extends StatelessWidget {
-  const ImageButton({super.key});
+  final GestureTapCallback? onTap;
+  final String? imagePath;
+  const ImageButton({
+    super.key,
+    this.onTap,
+    this.imagePath,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -18,22 +26,54 @@ class ImageButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(15),
         child: InkWell(
           borderRadius: BorderRadius.circular(15),
-          onTap: () {},
-          child: const Padding(
-            padding: EdgeInsets.symmetric(
+          onTap: onTap,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(
               horizontal: 6,
               vertical: 5,
             ),
             child: Row(
               children: [
-                CircleAvatar(
+                Container(
+                  height: 44,
+                  width: 44,
+                  decoration: const BoxDecoration(
+                    color: AppColors.blue,
+                    shape: BoxShape.circle,
+                  ),
+                  child: imagePath == null || imagePath == ""
+                      ? const Center(
+                          child: Icon(
+                            Icons.add_a_photo_rounded,
+                            color: Colors.white,
+                            size: 15,
+                          ),
+                        )
+                      : ClipRRect(
+                          borderRadius: BorderRadius.circular(100),
+                          child: Image.file(
+                            fit: BoxFit.cover,
+                            File(
+                              imagePath!,
+                            ),
+                            errorBuilder: (_, __, ___) {
+                              return const Icon(
+                                Icons.add_a_photo_rounded,
+                                color: Colors.white,
+                                size: 15,
+                              );
+                            },
+                          ),
+                        ),
+                ),
+                /*CircleAvatar(
                   backgroundColor: Colors.pink,
                   maxRadius: 22,
-                ),
-                SizedBox(
+                ),*/
+                const SizedBox(
                   width: 10,
                 ),
-                Text(
+                const Text(
                   'Editar Foto',
                   style: TextStyle(
                     fontSize: 11,
