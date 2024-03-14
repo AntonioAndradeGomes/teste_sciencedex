@@ -13,7 +13,7 @@
 #  Visão Geral
 É uma aplicação de teste feito em [Flutter](https://flutter.dev/), para testar meus conhecimentos nesta tecnologia. Foi usado o Cubit para gerenciamento de estado e o [Modular](https://modular.flutterando.com.br/docs/flutter_modular/start) para trabalhar com Rotas e Sistema de Injeção de Dependências.
 
-Segue o [link](https://www.figma.com/file/lErE86p76iOU3MoJWwd8lW/Tarefa-Dev-(Community)?type=design&node-id=0%3A17&mode=design&t=9XnjHWGpopDO3Szo-1) do Figma do projeto, que nele há a descrição do teste.
+Segue o [link](https://www.figma.com/file/lErE86p76iOU3MoJWwd8lW/Tarefa-Dev-(Community)?type=design&node-id=0-1&mode=design&t=D4gtXZPPT4YkEg1B-0) do Figma do projeto, que nele há a descrição do teste.
 
 </div>
 <br>
