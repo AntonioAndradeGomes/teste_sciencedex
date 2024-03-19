@@ -25,7 +25,7 @@ class ListPeriodsWidget extends StatelessWidget {
           return ListView.separated(
             padding: const EdgeInsets.symmetric(
               horizontal: 7,
-              vertical: 20,
+              vertical: 23,
             ),
             itemCount: state.periods!.length,
             itemBuilder: (context, index) {

@@ -13,11 +13,20 @@ class ErrorFormAlertDialog extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AlertDialog.adaptive(
+      backgroundColor: Colors.white,
+      elevation: 0,
       title: Text(
         title,
+        textAlign: TextAlign.center,
       ),
       content: Column(
-        children: [Text(message)],
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            message,
+            textAlign: TextAlign.center,
+          ),
+        ],
       ),
       actions: [
         TextButton(

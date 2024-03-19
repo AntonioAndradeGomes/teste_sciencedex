@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:intl/intl.dart';
@@ -90,20 +92,52 @@ class _AddPeriodDialogState extends State<AddPeriodDialog> {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  TextFormField(
-                    initialValue: _formCubit.state.name,
-                    onChanged: _formCubit.updateName,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: AppColors.grey2,
-                      border: UnderlineInputBorder(
-                        borderSide: BorderSide.none,
-                        borderRadius: BorderRadius.circular(5),
+                  SizedBox(
+                    height: 39,
+                    child: TextFormField(
+                      initialValue: _formCubit.state.name,
+                      onChanged: _formCubit.updateName,
+                      decoration: const InputDecoration(
+                        filled: true,
+                        fillColor: AppColors.grey2,
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.transparent,
+                          ),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(5),
+                          ),
+                        ),
+                        contentPadding: EdgeInsets.symmetric(
+                          horizontal: 15,
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.transparent,
+                          ),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(5),
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Colors.transparent,
+                          ),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(5),
+                          ),
+                        ),
+                        hintText: 'Nomeie seu período',
+                        hintStyle: TextStyle(
+                          fontWeight: FontWeight.w500,
+                          color: AppColors.grey3,
+                          fontSize: 12,
+                        ),
                       ),
-                      hintText: 'Nomeie seu período',
-                      hintStyle: const TextStyle(
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
                         fontWeight: FontWeight.w500,
-                        color: AppColors.grey3,
                       ),
                     ),
                   ),
@@ -348,38 +382,103 @@ class _AddPeriodDialogState extends State<AddPeriodDialog> {
                         ? Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              FilledButton(
-                                onPressed: () {
-                                  Modular.to.pop(
-                                    _formCubit.returnPeriod(
-                                      TypeReturn.del,
+                              SizedBox(
+                                height: 30,
+                                child: FilledButton(
+                                  onPressed: () {
+                                    Modular.to.pop(
+                                      _formCubit.returnPeriod(
+                                        TypeReturn.del,
+                                      ),
+                                    );
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.red,
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 8,
+                                      horizontal: 20,
                                     ),
-                                  );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.red,
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 8,
-                                    horizontal: 20,
                                   ),
+                                  child: const Text(
+                                    'Excluir',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ), // Define o texto do botão
                                 ),
-                                child: const Text(
-                                  'Excluir',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ), // Define o texto do botão
                               ),
-                              FilledButton(
+                              SizedBox(
+                                height: 30,
+                                child: FilledButton(
+                                  onPressed: () {
+                                    if (_formCubit.isValid()) {
+                                      if (state.dateEnd!
+                                          .isAfter(state.dateInit!)) {
+                                        Modular.to.pop(
+                                          _formCubit.returnPeriod(
+                                            TypeReturn.up,
+                                          ),
+                                        );
+                                      } else {
+                                        showAdaptiveDialog(
+                                          context: context,
+                                          builder: (_) =>
+                                              const ErrorFormAlertDialog(
+                                            title: "Erro!",
+                                            message:
+                                                'Data inicial depois da data final!',
+                                          ),
+                                        );
+                                      }
+                                    } else {
+                                      showAdaptiveDialog(
+                                        context: context,
+                                        builder: (_) => ErrorFormAlertDialog(
+                                          title:
+                                              "Alguns dados devem ser preenchidos corretamente",
+                                          message: _generateError(
+                                            isName: state.name.isEmpty,
+                                            isInit: state.dateInit == null,
+                                            isEnd: state.dateEnd == null,
+                                            isCategory: state.category == null,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: AppColors.blue,
+                                    padding: const EdgeInsets.symmetric(
+                                      vertical: 8,
+                                      horizontal: 20,
+                                    ),
+                                  ),
+                                  child: const Text(
+                                    'Editar',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ), // Define o texto do botão
+                                ),
+                              ),
+                            ],
+                          )
+                        : Align(
+                            alignment: Alignment.center,
+                            child: SizedBox(
+                              height: 30,
+                              child: FilledButton(
                                 onPressed: () {
                                   if (_formCubit.isValid()) {
                                     if (state.dateEnd!
                                         .isAfter(state.dateInit!)) {
                                       Modular.to.pop(
                                         _formCubit.returnPeriod(
-                                          TypeReturn.up,
+                                          TypeReturn.add,
                                         ),
                                       );
                                     } else {
@@ -417,7 +516,7 @@ class _AddPeriodDialogState extends State<AddPeriodDialog> {
                                   ),
                                 ),
                                 child: const Text(
-                                  'Editar',
+                                  'Concluir',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 12,
@@ -425,61 +524,6 @@ class _AddPeriodDialogState extends State<AddPeriodDialog> {
                                   ),
                                 ), // Define o texto do botão
                               ),
-                            ],
-                          )
-                        : Align(
-                            alignment: Alignment.center,
-                            child: FilledButton(
-                              onPressed: () {
-                                if (_formCubit.isValid()) {
-                                  if (state.dateEnd!.isAfter(state.dateInit!)) {
-                                    Modular.to.pop(
-                                      _formCubit.returnPeriod(
-                                        TypeReturn.add,
-                                      ),
-                                    );
-                                  } else {
-                                    showAdaptiveDialog(
-                                      context: context,
-                                      builder: (_) =>
-                                          const ErrorFormAlertDialog(
-                                        title: "Erro!",
-                                        message:
-                                            'Data inicial depois da data final!',
-                                      ),
-                                    );
-                                  }
-                                } else {
-                                  showAdaptiveDialog(
-                                    context: context,
-                                    builder: (_) => ErrorFormAlertDialog(
-                                      title:
-                                          "Alguns dados devem ser preenchidos corretamente",
-                                      message: _generateError(
-                                        isName: state.name.isEmpty,
-                                        isInit: state.dateInit == null,
-                                        isEnd: state.dateEnd == null,
-                                        isCategory: state.category == null,
-                                      ),
-                                    ),
-                                  );
-                                }
-                              },
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: AppColors.blue,
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: 8,
-                                  horizontal: 20,
-                                ),
-                              ),
-                              child: const Text(
-                                'Concluir',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ), // Define o texto do botão
                             ),
                           ),
                   ),

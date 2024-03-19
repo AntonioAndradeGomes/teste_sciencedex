@@ -6,8 +6,8 @@ class DividerWidget extends StatelessWidget {
   final double bottom;
   const DividerWidget({
     super.key,
-    this.top = 20,
-    this.bottom = 16,
+    this.top = 22.31,
+    this.bottom = 16.57,
   });
 
   @override

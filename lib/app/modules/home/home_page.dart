@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:teste_sciencedex/app/modules/home/cubit/periods/periods_cubit.dart';
 import 'package:teste_sciencedex/app/modules/home/cubit/user/user_cubit.dart';
@@ -35,8 +36,26 @@ class _HomePageState extends State<HomePage> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
-          title: const Text('Configurações'),
+          title: Row(
+            children: [
+              const Icon(
+                Icons.arrow_back_ios_new_rounded,
+              ),
+              const SizedBox(
+                width: 5,
+              ),
+              Text(
+                'Configurações',
+                style: GoogleFonts.inter(
+                  color: Colors.black,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
           elevation: 0,
           backgroundColor: Colors.white,
           centerTitle: false,
@@ -54,6 +73,8 @@ class _HomePageState extends State<HomePage> {
                   }
                   if (state is DoneUser) {
                     return Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Expanded(
                           child: InputUserNameWidget(
@@ -70,9 +91,10 @@ class _HomePageState extends State<HomePage> {
                             final XFile? image = await _picker.pickImage(
                               source: ImageSource.gallery,
                             );
-
                             if (image != null) {
-                              _userCubit.setFilePath(image.path);
+                              _userCubit.setFilePath(
+                                image.path,
+                              );
                             }
                           },
                         ),
@@ -94,7 +116,7 @@ class _HomePageState extends State<HomePage> {
               Container(
                 height: 345,
                 margin: const EdgeInsets.only(
-                  top: 17,
+                  top: 17.82,
                   bottom: 12,
                 ),
                 decoration: BoxDecoration(
@@ -105,33 +127,37 @@ class _HomePageState extends State<HomePage> {
               ),
               Align(
                 alignment: Alignment.topRight,
-                child: FilledButton(
-                  onPressed: () async {
-                    final entity = await showDialog<FormReturn?>(
-                      barrierColor: Colors.black.withOpacity(0.25),
-                      context: context,
-                      builder: (context) {
-                        return const AddPeriodDialog();
-                      },
-                    );
-                    if (entity != null) {
-                      _periodsCubit.addPeriod(
-                        entity.periodModel,
+                child: SizedBox(
+                  height: 24,
+                  width: 98,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      final entity = await showDialog<FormReturn?>(
+                        barrierColor: Colors.black.withOpacity(0.25),
+                        context: context,
+                        builder: (context) {
+                          return const AddPeriodDialog();
+                        },
                       );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.blue,
-                    padding: const EdgeInsets.all(6),
-                  ),
-                  child: const Text(
-                    'Adicionar Periodo',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
+                      if (entity != null) {
+                        _periodsCubit.addPeriod(
+                          entity.periodModel,
+                        );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.blue,
+                      padding: const EdgeInsets.all(6),
                     ),
-                  ), // Define o texto do botão
+                    child: const Text(
+                      'Adicionar Periodo',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ), // Define o texto do botão
+                  ),
                 ),
               ),
               const SizedBox(

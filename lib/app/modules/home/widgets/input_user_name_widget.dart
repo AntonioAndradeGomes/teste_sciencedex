@@ -12,38 +12,67 @@ class InputUserNameWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      initialValue: initialValue,
-      onChanged: onChanged,
-      decoration: const InputDecoration(
-        fillColor: Colors.white,
-        filled: true,
-        border: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: AppColors.grey3,
-          ),
-          borderRadius: BorderRadius.all(
-            Radius.circular(7),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Apelido',
+          style: TextStyle(
+            fontSize: 11,
+            fontWeight: FontWeight.w500,
+            color: Colors.black,
           ),
         ),
-        contentPadding: EdgeInsets.symmetric(
-          horizontal: 5,
+        const SizedBox(
+          height: 5,
         ),
-        labelText: 'Apelido',
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-            color: AppColors.grey3,
-          ),
-          borderRadius: BorderRadius.all(
-            Radius.circular(7),
+        SizedBox(
+          height: 31,
+          child: TextFormField(
+            initialValue: initialValue,
+            onChanged: onChanged,
+            decoration: const InputDecoration(
+              fillColor: Colors.white,
+              filled: true,
+              border: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: AppColors.grey3,
+                  width: 2,
+                ),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(7),
+                ),
+              ),
+              contentPadding: EdgeInsets.symmetric(
+                horizontal: 5,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: AppColors.grey3,
+                  width: 2,
+                ),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(7),
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(
+                  color: AppColors.grey3,
+                  width: 2,
+                ),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(7),
+                ),
+              ),
+            ),
+            style: const TextStyle(
+              color: Colors.black,
+              fontSize: 13,
+              fontWeight: FontWeight.w400,
+            ),
           ),
         ),
-      ),
-      style: const TextStyle(
-        color: Colors.black,
-        fontSize: 13,
-        fontWeight: FontWeight.w400,
-      ),
+      ],
     );
   }
 }

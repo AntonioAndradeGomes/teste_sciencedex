@@ -15,17 +15,17 @@ class ImageButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 55,
-      width: 129,
+      height: 55.6,
+      width: 129.62,
       decoration: BoxDecoration(
         color: AppColors.grey1,
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(9),
       ),
       child: Material(
         color: Colors.transparent,
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(9),
         child: InkWell(
-          borderRadius: BorderRadius.circular(15),
+          borderRadius: BorderRadius.circular(9),
           onTap: onTap,
           child: Padding(
             padding: const EdgeInsets.symmetric(
@@ -35,8 +35,8 @@ class ImageButton extends StatelessWidget {
             child: Row(
               children: [
                 Container(
-                  height: 44,
-                  width: 44,
+                  height: 44.13,
+                  width: 44.13,
                   decoration: const BoxDecoration(
                     color: AppColors.blue,
                     shape: BoxShape.circle,
@@ -66,12 +66,8 @@ class ImageButton extends StatelessWidget {
                           ),
                         ),
                 ),
-                /*CircleAvatar(
-                  backgroundColor: Colors.pink,
-                  maxRadius: 22,
-                ),*/
                 const SizedBox(
-                  width: 10,
+                  width: 11.57,
                 ),
                 const Text(
                   'Editar Foto',
