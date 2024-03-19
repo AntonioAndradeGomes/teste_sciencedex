@@ -6,6 +6,7 @@ import 'package:teste_sciencedex/app/modules/home/cubit/periods/periods_state.da
 import 'package:teste_sciencedex/app/modules/home/models/form_return.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/add_period_dialog.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/period_item.dart';
+import 'package:teste_sciencedex/app/modules/home/widgets/show_period_dialog.dart';
 
 class ListPeriodsWidget extends StatelessWidget {
   const ListPeriodsWidget({super.key});
@@ -33,20 +34,36 @@ class ListPeriodsWidget extends StatelessWidget {
               return PeriodItem(
                 entity: period,
                 onTap: () async {
-                  final entity = await showDialog<FormReturn?>(
+                  FocusScope.of(context).unfocus();
+                  final type = await showDialog<TypeReturn?>(
                     barrierColor: Colors.black.withOpacity(0.25),
                     context: context,
                     builder: (context) {
-                      return AddPeriodDialog(
+                      return ShowPeriodDialog(
                         entity: period,
                       );
                     },
-                  );
-                  if (entity != null) {
-                    if (entity.typeReturn == TypeReturn.del) {
-                      periodsCubit.removePeriod(entity.periodModel);
+                  ).then((value) {
+                    FocusScope.of(context).requestFocus(FocusNode());
+                    return value;
+                  });
+                  if (type != null) {
+                    if (type == TypeReturn.del) {
+                      periodsCubit.removePeriod(period);
                     } else {
-                      periodsCubit.updatePeriod(entity.periodModel);
+                      final entity = await showDialog<FormReturn?>(
+                        barrierColor: Colors.black.withOpacity(0.25),
+                        // ignore: use_build_context_synchronously
+                        context: context,
+                        builder: (context) {
+                          return AddPeriodDialog(
+                            entity: period,
+                          );
+                        },
+                      );
+                      if (entity != null) {
+                        periodsCubit.updatePeriod(entity.periodModel);
+                      }
                     }
                   }
                 },

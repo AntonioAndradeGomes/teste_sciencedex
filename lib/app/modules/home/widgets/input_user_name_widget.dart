@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:teste_sciencedex/app/shared/theme/app_colors.dart';
 
 class InputUserNameWidget extends StatelessWidget {
@@ -15,9 +16,9 @@ class InputUserNameWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           'Apelido',
-          style: TextStyle(
+          style: GoogleFonts.inter(
             fontSize: 11,
             fontWeight: FontWeight.w500,
             color: Colors.black,
@@ -65,7 +66,7 @@ class InputUserNameWidget extends StatelessWidget {
                 ),
               ),
             ),
-            style: const TextStyle(
+            style: GoogleFonts.inter(
               color: Colors.black,
               fontSize: 13,
               fontWeight: FontWeight.w400,

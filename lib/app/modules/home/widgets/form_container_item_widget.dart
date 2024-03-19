@@ -3,13 +3,16 @@ import 'package:teste_sciencedex/app/shared/theme/app_colors.dart';
 
 class FormContainerItemWidget extends StatelessWidget {
   final Widget? child;
-  const FormContainerItemWidget({super.key, this.child});
+  const FormContainerItemWidget({
+    super.key,
+    this.child,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 110,
-      height: 30,
+      width: 103,
+      height: 29,
       decoration: BoxDecoration(
         border: Border.all(
           color: AppColors.grey3,

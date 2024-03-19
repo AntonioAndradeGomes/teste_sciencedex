@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:teste_sciencedex/app/shared/theme/app_colors.dart';
 
 class ImageButton extends StatelessWidget {
@@ -69,9 +70,9 @@ class ImageButton extends StatelessWidget {
                 const SizedBox(
                   width: 11.57,
                 ),
-                const Text(
+                Text(
                   'Editar Foto',
-                  style: TextStyle(
+                  style: GoogleFonts.inter(
                     fontSize: 11,
                     color: Colors.black,
                     fontWeight: FontWeight.w500,

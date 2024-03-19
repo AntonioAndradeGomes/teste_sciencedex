@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
@@ -14,6 +12,7 @@ import 'package:teste_sciencedex/app/modules/home/widgets/divider_widget.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/image_button.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/input_user_name_widget.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/list_periods_widget.dart';
+import 'package:teste_sciencedex/app/modules/home/widgets/logout_widget.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/user_data_loading_widget.dart';
 import 'package:teste_sciencedex/app/shared/theme/app_colors.dart';
 
@@ -32,9 +31,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
+      onTap: FocusScope.of(context).unfocus,
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
@@ -105,9 +102,9 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
               const DividerWidget(),
-              const Text(
+              Text(
                 'Períodos',
-                style: TextStyle(
+                style: GoogleFonts.inter(
                   color: Colors.black,
                   fontSize: 14,
                   fontWeight: FontWeight.w600,
@@ -129,7 +126,6 @@ class _HomePageState extends State<HomePage> {
                 alignment: Alignment.topRight,
                 child: SizedBox(
                   height: 24,
-                  width: 98,
                   child: ElevatedButton(
                     onPressed: () async {
                       final entity = await showDialog<FormReturn?>(
@@ -137,6 +133,11 @@ class _HomePageState extends State<HomePage> {
                         context: context,
                         builder: (context) {
                           return const AddPeriodDialog();
+                        },
+                      ).then(
+                        (value) {
+                          FocusScope.of(context).requestFocus(FocusNode());
+                          return value;
                         },
                       );
                       if (entity != null) {
@@ -149,9 +150,9 @@ class _HomePageState extends State<HomePage> {
                       backgroundColor: AppColors.blue,
                       padding: const EdgeInsets.all(6),
                     ),
-                    child: const Text(
+                    child: Text(
                       'Adicionar Periodo',
-                      style: TextStyle(
+                      style: GoogleFonts.inter(
                         color: Colors.white,
                         fontSize: 10,
                         fontWeight: FontWeight.w600,
@@ -161,77 +162,15 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               const SizedBox(
-                height: 60,
+                height: 65.64,
               ),
               BlocBuilder<UserCubit, UserState>(
                 bloc: _userCubit,
                 builder: (context, state) {
                   if (state is DoneUser) {
-                    return Row(
-                      children: [
-                        Container(
-                          height: 44,
-                          width: 44,
-                          decoration: const BoxDecoration(
-                            color: AppColors.blue,
-                            shape: BoxShape.circle,
-                          ),
-                          child:
-                              state.pathImage == null || state.pathImage == ""
-                                  ? const Center(
-                                      child: Icon(
-                                        Icons.image_rounded,
-                                        color: Colors.white,
-                                        size: 15,
-                                      ),
-                                    )
-                                  : ClipRRect(
-                                      borderRadius: BorderRadius.circular(100),
-                                      child: Image.file(
-                                        fit: BoxFit.cover,
-                                        File(
-                                          state.pathImage!,
-                                        ),
-                                        errorBuilder: (_, __, ___) {
-                                          return const Icon(
-                                            Icons.add_a_photo_rounded,
-                                            color: Colors.white,
-                                            size: 15,
-                                          );
-                                        },
-                                      ),
-                                    ),
-                        ),
-                        const SizedBox(
-                          width: 14,
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              state.username ?? '',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w500,
-                                color: AppColors.blue,
-                              ),
-                            ),
-                            InkWell(
-                              borderRadius: BorderRadius.circular(15),
-                              onTap: () {},
-                              child: const Text(
-                                'Sair',
-                                style: TextStyle(
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w500,
-                                  color: AppColors.blue,
-                                  decoration: TextDecoration.underline,
-                                ),
-                              ),
-                            ),
-                          ],
-                        )
-                      ],
+                    return LogoutWidget(
+                      pathImage: state.pathImage,
+                      username: state.username,
                     );
                   }
                   return const SizedBox();

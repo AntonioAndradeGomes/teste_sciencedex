@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 class FormItemClickWidget extends StatelessWidget {
   final GestureTapCallback? onTap;
   final String label;
-  const FormItemClickWidget({super.key, this.onTap, required this.label});
+  const FormItemClickWidget({
+    super.key,
+    this.onTap,
+    required this.label,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +18,13 @@ class FormItemClickWidget extends StatelessWidget {
         borderRadius: BorderRadius.circular(7),
         onTap: onTap,
         child: Center(
-          child: Text(label),
+          child: Text(
+            label,
+            style: const TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.w400,
+            ),
+          ),
         ),
       ),
     );

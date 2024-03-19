@@ -1,19 +1,20 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:teste_sciencedex/app/modules/home/cubit/form/form_cubit.dart';
 import 'package:teste_sciencedex/app/modules/home/cubit/form/form_validator_state.dart';
 import 'package:teste_sciencedex/app/modules/home/models/form_return.dart';
 import 'package:teste_sciencedex/app/modules/home/models/period_model.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/divider_widget.dart';
+import 'package:teste_sciencedex/app/modules/home/widgets/drop_down_category_widget.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/error_form_alert_dialog.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/form_container_item_widget.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/form_item_click_widget.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/form_text_indicator_widget.dart';
+import 'package:teste_sciencedex/app/modules/home/widgets/name_text_field_for_dialog_widget.dart';
+import 'package:teste_sciencedex/app/modules/home/widgets/text_field_for_dialog_widget.dart';
 import 'package:teste_sciencedex/app/shared/theme/app_colors.dart';
 import 'package:teste_sciencedex/app/shared/utils/helpers.dart';
 
@@ -38,7 +39,6 @@ class _AddPeriodDialogState extends State<AddPeriodDialog> {
         periodEntity: widget.entity!,
       );
     }
-
     super.initState();
   }
 
@@ -52,13 +52,13 @@ class _AddPeriodDialogState extends State<AddPeriodDialog> {
         right: 15,
         left: 15,
       ),
-      contentPadding: const EdgeInsets.all(0),
+      contentPadding: EdgeInsets.zero,
       title: Row(
         children: [
-          const Expanded(
+          Expanded(
             child: Text(
               'Novo Período',
-              style: TextStyle(
+              style: GoogleFonts.inter(
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
                 color: Colors.black,
@@ -92,54 +92,9 @@ class _AddPeriodDialogState extends State<AddPeriodDialog> {
               return Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  SizedBox(
-                    height: 39,
-                    child: TextFormField(
-                      initialValue: _formCubit.state.name,
-                      onChanged: _formCubit.updateName,
-                      decoration: const InputDecoration(
-                        filled: true,
-                        fillColor: AppColors.grey2,
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
-                          ),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(5),
-                          ),
-                        ),
-                        contentPadding: EdgeInsets.symmetric(
-                          horizontal: 15,
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
-                          ),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(5),
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(
-                            color: Colors.transparent,
-                          ),
-                          borderRadius: BorderRadius.all(
-                            Radius.circular(5),
-                          ),
-                        ),
-                        hintText: 'Nomeie seu período',
-                        hintStyle: TextStyle(
-                          fontWeight: FontWeight.w500,
-                          color: AppColors.grey3,
-                          fontSize: 12,
-                        ),
-                      ),
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+                  NameTextFieldForDialogWidget(
+                    initialNameValue: state.name,
+                    onChanged: _formCubit.updateName,
                   ),
                   Container(
                     margin: const EdgeInsets.symmetric(
@@ -165,6 +120,8 @@ class _AddPeriodDialogState extends State<AddPeriodDialog> {
                             FormContainerItemWidget(
                               child: FormItemClickWidget(
                                 onTap: () async {
+                                  FocusScope.of(context)
+                                      .requestFocus(FocusNode());
                                   final date = await Helpers.selectDate(
                                     context,
                                     state.dateInit ?? DateTime.now(),
@@ -191,6 +148,8 @@ class _AddPeriodDialogState extends State<AddPeriodDialog> {
                             FormContainerItemWidget(
                               child: FormItemClickWidget(
                                 onTap: () async {
+                                  FocusScope.of(context)
+                                      .requestFocus(FocusNode());
                                   final date = await Helpers.selectDate(
                                     context,
                                     state.dateInit ?? DateTime.now(),
@@ -223,30 +182,10 @@ class _AddPeriodDialogState extends State<AddPeriodDialog> {
                             ),
                             FormContainerItemWidget(
                               child: Center(
-                                child: DropdownButton<String>(
-                                  underline: const SizedBox(),
-                                  borderRadius: BorderRadius.circular(8),
-                                  iconSize: 15,
-                                  isDense: false,
-                                  padding: EdgeInsets.zero,
-                                  icon: const Icon(
-                                    Icons.keyboard_arrow_down_rounded,
-                                  ),
-                                  value: state.category,
-                                  items: _formCubit.listCategory
-                                      .map((e) => DropdownMenuItem<String>(
-                                            value: e,
-                                            child: Text(
-                                              e,
-                                              style: const TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w400,
-                                              ),
-                                            ),
-                                          ))
-                                      .toList(),
+                                child: DropDownCategoryWidget(
+                                  categories: _formCubit.listCategory,
                                   onChanged: _formCubit.updayteCategory,
+                                  value: state.category,
                                 ),
                               ),
                             ),
@@ -266,51 +205,9 @@ class _AddPeriodDialogState extends State<AddPeriodDialog> {
                             const FormTextIndicatorWidget(
                               label: 'Meta 1',
                             ),
-                            SizedBox(
-                              width: 75,
-                              height: 30,
-                              child: TextFormField(
-                                initialValue: _formCubit.state.goal1,
-                                onChanged: _formCubit.updateGoal1,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                      RegExp(r'[0-9]')),
-                                ],
-                                decoration: const InputDecoration(
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.grey3,
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(7),
-                                    ),
-                                  ),
-                                  contentPadding: EdgeInsets.zero,
-                                  hintText: 'un',
-                                  hintStyle: TextStyle(
-                                    color: AppColors.grey3,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.grey3,
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(7),
-                                    ),
-                                  ),
-                                ),
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
+                            TextFieldForDialogWidget(
+                              initialValue: state.goal1,
+                              onChanged: _formCubit.updateGoal1,
                             ),
                           ],
                         ),
@@ -322,51 +219,9 @@ class _AddPeriodDialogState extends State<AddPeriodDialog> {
                             const FormTextIndicatorWidget(
                               label: 'Meta 2',
                             ),
-                            SizedBox(
-                              width: 75,
-                              height: 30,
-                              child: TextFormField(
-                                initialValue: _formCubit.state.goal2,
-                                onChanged: _formCubit.updateGoal2,
-                                keyboardType: TextInputType.number,
-                                inputFormatters: [
-                                  FilteringTextInputFormatter.allow(
-                                      RegExp(r'[0-9]')),
-                                ],
-                                decoration: const InputDecoration(
-                                  fillColor: Colors.white,
-                                  filled: true,
-                                  border: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.grey3,
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(7),
-                                    ),
-                                  ),
-                                  contentPadding: EdgeInsets.zero,
-                                  hintText: 'un',
-                                  hintStyle: TextStyle(
-                                    color: AppColors.grey3,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.w400,
-                                  ),
-                                  enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(
-                                      color: AppColors.grey3,
-                                    ),
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(7),
-                                    ),
-                                  ),
-                                ),
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
+                            TextFieldForDialogWidget(
+                              initialValue: state.goal2,
+                              onChanged: _formCubit.updateGoal2,
                             ),
                           ],
                         ),
@@ -374,158 +229,65 @@ class _AddPeriodDialogState extends State<AddPeriodDialog> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(
+                    padding: const EdgeInsets.symmetric(
                       vertical: 35,
-                      horizontal: widget.entity != null ? 15 : 0,
                     ),
-                    child: widget.entity != null
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              SizedBox(
-                                height: 30,
-                                child: FilledButton(
-                                  onPressed: () {
-                                    Modular.to.pop(
-                                      _formCubit.returnPeriod(
-                                        TypeReturn.del,
-                                      ),
-                                    );
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.red,
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 8,
-                                      horizontal: 20,
-                                    ),
+                    child: Align(
+                      alignment: Alignment.center,
+                      child: SizedBox(
+                        height: 30,
+                        width: 89,
+                        child: FilledButton(
+                          onPressed: () {
+                            if (_formCubit.isValid()) {
+                              if (state.dateEnd!.isAfter(state.dateInit!)) {
+                                Modular.to.pop(
+                                  _formCubit.returnPeriod(
+                                    widget.entity != null
+                                        ? TypeReturn.up
+                                        : TypeReturn.add,
                                   ),
-                                  child: const Text(
-                                    'Excluir',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ), // Define o texto do botão
-                                ),
-                              ),
-                              SizedBox(
-                                height: 30,
-                                child: FilledButton(
-                                  onPressed: () {
-                                    if (_formCubit.isValid()) {
-                                      if (state.dateEnd!
-                                          .isAfter(state.dateInit!)) {
-                                        Modular.to.pop(
-                                          _formCubit.returnPeriod(
-                                            TypeReturn.up,
-                                          ),
-                                        );
-                                      } else {
-                                        showAdaptiveDialog(
-                                          context: context,
-                                          builder: (_) =>
-                                              const ErrorFormAlertDialog(
-                                            title: "Erro!",
-                                            message:
-                                                'Data inicial depois da data final!',
-                                          ),
-                                        );
-                                      }
-                                    } else {
-                                      showAdaptiveDialog(
-                                        context: context,
-                                        builder: (_) => ErrorFormAlertDialog(
-                                          title:
-                                              "Alguns dados devem ser preenchidos corretamente",
-                                          message: _generateError(
-                                            isName: state.name.isEmpty,
-                                            isInit: state.dateInit == null,
-                                            isEnd: state.dateEnd == null,
-                                            isCategory: state.category == null,
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                  },
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: AppColors.blue,
-                                    padding: const EdgeInsets.symmetric(
-                                      vertical: 8,
-                                      horizontal: 20,
-                                    ),
+                                );
+                              } else {
+                                showAdaptiveDialog(
+                                  context: context,
+                                  builder: (_) => const ErrorFormAlertDialog(
+                                    title: "Erro!",
+                                    message:
+                                        'Data inicial depois da data final!',
                                   ),
-                                  child: const Text(
-                                    'Editar',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ), // Define o texto do botão
-                                ),
-                              ),
-                            ],
-                          )
-                        : Align(
-                            alignment: Alignment.center,
-                            child: SizedBox(
-                              height: 30,
-                              child: FilledButton(
-                                onPressed: () {
-                                  if (_formCubit.isValid()) {
-                                    if (state.dateEnd!
-                                        .isAfter(state.dateInit!)) {
-                                      Modular.to.pop(
-                                        _formCubit.returnPeriod(
-                                          TypeReturn.add,
-                                        ),
-                                      );
-                                    } else {
-                                      showAdaptiveDialog(
-                                        context: context,
-                                        builder: (_) =>
-                                            const ErrorFormAlertDialog(
-                                          title: "Erro!",
-                                          message:
-                                              'Data inicial depois da data final!',
-                                        ),
-                                      );
-                                    }
-                                  } else {
-                                    showAdaptiveDialog(
-                                      context: context,
-                                      builder: (_) => ErrorFormAlertDialog(
-                                        title:
-                                            "Alguns dados devem ser preenchidos corretamente",
-                                        message: _generateError(
-                                          isName: state.name.isEmpty,
-                                          isInit: state.dateInit == null,
-                                          isEnd: state.dateEnd == null,
-                                          isCategory: state.category == null,
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: AppColors.blue,
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 8,
-                                    horizontal: 20,
+                                );
+                              }
+                            } else {
+                              showAdaptiveDialog(
+                                context: context,
+                                builder: (_) => ErrorFormAlertDialog(
+                                  title:
+                                      "Alguns dados devem ser preenchidos corretamente",
+                                  message: _generateError(
+                                    isName: state.name.isEmpty,
+                                    isInit: state.dateInit == null,
+                                    isEnd: state.dateEnd == null,
+                                    isCategory: state.category == null,
                                   ),
                                 ),
-                                child: const Text(
-                                  'Concluir',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ), // Define o texto do botão
-                              ),
-                            ),
+                              );
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.blue,
                           ),
+                          child: const Text(
+                            'Concluir',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ), // Define o texto do botão
+                        ),
+                      ),
+                    ),
                   ),
                 ],
               );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:teste_sciencedex/app/modules/home/models/period_model.dart';
 import 'package:teste_sciencedex/app/shared/theme/app_colors.dart';
 
@@ -29,13 +30,18 @@ class PeriodItem extends StatelessWidget {
           borderRadius: BorderRadius.circular(5),
           onTap: onTap,
           child: Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.only(
+              top: 10,
+              bottom: 10,
+              left: 15,
+              right: 8,
+            ),
             child: Row(
               children: [
                 Expanded(
                   child: Text(
                     entity.name,
-                    style: const TextStyle(
+                    style: GoogleFonts.inter(
                       fontSize: 14,
                       fontWeight: FontWeight.w600,
                       color: Colors.black,
@@ -50,7 +56,7 @@ class PeriodItem extends StatelessWidget {
                 ),
                 Text(
                   entity.periodDatesFormated,
-                  style: const TextStyle(
+                  style: GoogleFonts.inter(
                     color: AppColors.greyText,
                     fontSize: 11,
                     fontWeight: FontWeight.w400,
