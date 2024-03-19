@@ -7,7 +7,7 @@ import 'package:teste_sciencedex/app/modules/home/cubit/periods/periods_cubit.da
 import 'package:teste_sciencedex/app/modules/home/cubit/user/user_cubit.dart';
 import 'package:teste_sciencedex/app/modules/home/cubit/user/user_state.dart';
 import 'package:teste_sciencedex/app/modules/home/models/form_return.dart';
-import 'package:teste_sciencedex/app/modules/home/widgets/add_period_dialog.dart';
+import 'package:teste_sciencedex/app/modules/home/widgets/modals/add_period_dialog.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/divider_widget.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/image_button.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/input_user_name_widget.dart';

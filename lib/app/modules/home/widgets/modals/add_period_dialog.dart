@@ -9,7 +9,7 @@ import 'package:teste_sciencedex/app/modules/home/models/form_return.dart';
 import 'package:teste_sciencedex/app/modules/home/models/period_model.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/divider_widget.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/drop_down_category_widget.dart';
-import 'package:teste_sciencedex/app/modules/home/widgets/error_form_alert_dialog.dart';
+import 'package:teste_sciencedex/app/modules/home/widgets/modals/error_form_alert_dialog.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/form_container_item_widget.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/form_item_click_widget.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/form_text_indicator_widget.dart';

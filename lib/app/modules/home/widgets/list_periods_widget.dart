@@ -4,9 +4,9 @@ import 'package:flutter_modular/flutter_modular.dart';
 import 'package:teste_sciencedex/app/modules/home/cubit/periods/periods_cubit.dart';
 import 'package:teste_sciencedex/app/modules/home/cubit/periods/periods_state.dart';
 import 'package:teste_sciencedex/app/modules/home/models/form_return.dart';
-import 'package:teste_sciencedex/app/modules/home/widgets/add_period_dialog.dart';
+import 'package:teste_sciencedex/app/modules/home/widgets/modals/add_period_dialog.dart';
 import 'package:teste_sciencedex/app/modules/home/widgets/period_item.dart';
-import 'package:teste_sciencedex/app/modules/home/widgets/show_period_dialog.dart';
+import 'package:teste_sciencedex/app/modules/home/widgets/modals/show_period_dialog.dart';
 
 class ListPeriodsWidget extends StatelessWidget {
   const ListPeriodsWidget({super.key});
